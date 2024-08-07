@@ -6,7 +6,7 @@ class Teacher(models.Model):
     # Main Details
     email = models.EmailField("Teacher Email Address", max_length=50)
     password = models.TextField("Teacher Password", max_length=20)
-    phone = models.IntegerField("Teacher Phone no.", max_length=10)
+    phone = models.TextField("Teacher Phone no.", max_length=10)
     name = models.TextField("Teacher Name", max_length=30)
 
     # Supplementary Details
@@ -15,10 +15,13 @@ class Teacher(models.Model):
     # OTP Details
     onboarded = models.BooleanField("Teacher Onboarded Status", default=False)
     forgottenPassword = models.BooleanField("Teacher Forgotten Password", default=False)
-    otp = models.IntegerField("OTP Password", max_length=4, blank=True, null=True)
+    otp = models.TextField("OTP Password", max_length=4, null=True)
 
     # Student Details
     # studentList = models.Field
+
+    def __str__(self):
+        return self.name
 
 class Student(models.Model):
 
@@ -30,7 +33,7 @@ class Student(models.Model):
     firstName = models.TextField("Student First Name", max_length=30)
     lastName = models.TextField("Student Last Name", max_length=30)
     gender = models.TextField("Student Gender", choices=Gender.choices)
-    grade = models.IntegerField("Student Grade", max_length=2)
+    grade = models.IntegerField("Student Grade")
     studentDesc = models.TextField("Student Description", max_length=200, blank=True)
     displayImage = models.ImageField("Student Display Image")
 
@@ -40,3 +43,6 @@ class Student(models.Model):
 
     # Teacher Linked
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.firstName
