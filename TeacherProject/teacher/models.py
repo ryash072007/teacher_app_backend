@@ -10,10 +10,33 @@ class Teacher(models.Model):
     name = models.TextField("Teacher Name", max_length=30)
 
     # Supplementary Details
-    qualifications = models.TextField("Teacher Qualifications", max_length=200)
+    qualifications = models.TextField("Teacher Qualifications", max_length=200, blank=True)
 
     # OTP Details
     onboarded = models.BooleanField("Teacher Onboarded Status", default=False)
-    forgottenPassword = models.BooleanField("Teacher Forgotten Password")
-    otp = models.IntegerField("OTP Password", max_length=4)
+    forgottenPassword = models.BooleanField("Teacher Forgotten Password", default=False)
+    otp = models.IntegerField("OTP Password", max_length=4, blank=True, null=True)
 
+    # Student Details
+    # studentList = models.Field
+
+class Student(models.Model):
+
+    class Gender(models.TextChoices):
+        male = "male"
+        female = "female"
+
+    # Main Details
+    firstName = models.TextField("Student First Name", max_length=30)
+    lastName = models.TextField("Student Last Name", max_length=30)
+    gender = models.TextField("Student Gender", choices=Gender.choices)
+    grade = models.IntegerField("Student Grade", max_length=2)
+    studentDesc = models.TextField("Student Description", max_length=200, blank=True)
+    displayImage = models.ImageField("Student Display Image")
+
+    # Parent Details
+    parentName = models.TextField("Parents Name", max_length=30)
+    parentEmail = models.EmailField("Parents Email Address", max_length=50)
+
+    # Teacher Linked
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
