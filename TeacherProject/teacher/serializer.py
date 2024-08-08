@@ -6,6 +6,11 @@ class TeacherSignUpSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = ["email", "password", "phone", "name"]
 
+class TeacherQualificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ["qualifications"]
+
 class StudentAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import TeacherSignUpSerializer, StudentAddSerializer
-from .models import Teacher
+from .serializer import TeacherSignUpSerializer, StudentAddSerializer, TeacherQualificationSerializer
+from .models import Teacher, Student
 from .otp import createOTP, sendOTP
 
 # Create your views here.
@@ -15,6 +15,14 @@ class TeacherSignUpEndPoint(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Teacher created successfully", "status": 201})
+
+class TeacherQualificationEndPoint(APIView):
+    def post(self, request):
+        serializer = TeacherQualificationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Teacher Qualification added", 201)
+        return Response("Invalid Qualification Request", 400)
 
 class TeacherResetPasswordEndpoint(APIView):
     def post(self, request):
@@ -67,3 +75,15 @@ class StudentAddEndPoint(APIView):
             serializer.save()
             return Response("Valid", 200)
         return Response("Invalid", 400)
+
+class StudentRemoveEndPoint(APIView):
+    def post(self, request):
+        print([obj.id for obj in Student.objects.all()])
+        if not Student.objects.filter(id=request.data["id"]).exists():
+            return Response("Invalid Student ID", 400)
+            
+        student = Student.objects.get(id=request.data["id"])
+        student.delete()
+
+        return Response("Student deleted successfully", 200)
+

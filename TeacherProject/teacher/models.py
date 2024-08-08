@@ -13,7 +13,6 @@ class Teacher(models.Model):
     qualifications = models.TextField("Teacher Qualifications", max_length=200, blank=True)
 
     # OTP Details
-    onboarded = models.BooleanField("Teacher Onboarded Status", default=False)
     forgottenPassword = models.BooleanField("Teacher Forgotten Password", default=False)
     otp = models.TextField("OTP Password", max_length=4, null=True)
 
