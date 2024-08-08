@@ -94,7 +94,7 @@ class StudentsListEndPoint(APIView):
             {
                 "firstName": student.firstName,
                 "lastName": student.lastName,
-                "displayImage": student.displayImage if student.displayImage else None,
+                "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else None,
                 "grade": student.grade,
                 "id": student.id
             } for student in studentList
@@ -112,7 +112,7 @@ class StudentDetailsEndPoint(APIView):
             "gender": student.gender,
             "grade": student.grade,
             "studentDesc": student.studentDesc,
-            "displayImage": student.displayImage if student.displayImage else None,
+            "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else None,
             "parentName": student.parentName,
             "parentEmail": student.parentEmail,
             "id": student.id

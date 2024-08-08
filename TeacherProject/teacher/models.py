@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Teacher(models.Model):
@@ -22,11 +23,17 @@ class Teacher(models.Model):
     def __str__(self):
         return self.name
 
+
+def displayImageFilePath(instance, filename):
+    return f"{instance.id}." + filename.split('.')[-1]
+
+
 class Student(models.Model):
 
     class Gender(models.TextChoices):
         male = "male"
         female = "female"
+
 
     # Main Details
     firstName = models.TextField("Student First Name", max_length=30)
@@ -34,7 +41,7 @@ class Student(models.Model):
     gender = models.TextField("Student Gender", choices=Gender.choices)
     grade = models.IntegerField("Student Grade")
     studentDesc = models.TextField("Student Description", max_length=200, blank=True)
-    displayImage = models.ImageField("Student Display Image", null=True, blank=True, upload_to="teacher/StudentDisplayImages")
+    displayImage = models.ImageField("Student Display Image", null=True, blank=True, upload_to=displayImageFilePath)
 
     # Parent Details
     parentName = models.TextField("Parents Name", max_length=30)

@@ -35,6 +35,9 @@ EMAIL_HOST_USER = "teacherappinternship@gmail.com"
 EMAIL_HOST_PASSWORD = "lxuk czth umfx nroh"
 DEFAULT_FROM_EMAIL = "teacherappinternship@gmail.com"
 
+MEDIA_URL = "StudentDisplayImages/"
+MEDIA_ROOT = "teacher/StudentDisplayImages"
+
 # Application definition
 
 INSTALLED_APPS = [
