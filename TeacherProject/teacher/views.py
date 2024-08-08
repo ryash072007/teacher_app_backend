@@ -17,7 +17,7 @@ class TeacherSignUpEndPoint(APIView):
             serializer.save()
             return Response({"message": "Teacher created successfully", "status": 201}, 201)
 
-class TeacherQualificationEndPoint(APIView):
+class TeacherQualificationEndPoint(APIView): # FIX THIS
     def post(self, request):
         serializer = TeacherQualificationSerializer(data=request.data)
         if serializer.is_valid():
@@ -67,7 +67,7 @@ class TeacherSignInEndPoint(APIView):
         teacher = Teacher.objects.get(email = request.data["email"])            
         if not (request.data['password'] == teacher.password):
             return Response({"message": "Incorrect password", "status": 401}, 401)
-        return Response({"message": "Successfully signed in", "status": 200}, 200)
+        return Response({"message": "Successfully signed in", "id": teacher.id, "status": 200}, 200)
 
 class StudentAddEndPoint(APIView):
     def post(self, request):
@@ -90,7 +90,7 @@ class StudentRemoveEndPoint(APIView):
 
 class StudentsListEndPoint(APIView):
     def post(self, request):
-        studentList = Student.objects.filter(teacher=request.data["email"])
+        studentList = Student.objects.filter(teacher=request.data["id"])
         responseList = [
             {
                 "firstName": student.firstName,

@@ -47,7 +47,7 @@ class Student(models.Model):
     parentEmail = models.EmailField("Parents Email Address", max_length=50)
 
     # Teacher Linked
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, to_field='email')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.firstName
