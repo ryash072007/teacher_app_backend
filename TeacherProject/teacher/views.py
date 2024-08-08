@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import TeacherSignUpSerializer
+from .serializer import TeacherSignUpSerializer, StudentAddSerializer
 from .models import Teacher
 from .otp import createOTP, sendOTP
 
@@ -59,3 +59,11 @@ class TeacherSignInEndPoint(APIView):
         if not (request.data['password'] == teacher.password):
             return Response("Incorrect password", 401)
         return Response("Successfully signed in", 200)
+
+class StudentAddEndPoint(APIView):
+    def post(self, request):
+        serializer = StudentAddSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Valid", 200)
+        return Response("Invalid", 400)

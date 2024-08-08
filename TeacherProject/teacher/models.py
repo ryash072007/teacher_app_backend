@@ -4,7 +4,7 @@ from django.db import models
 class Teacher(models.Model):
 
     # Main Details
-    email = models.EmailField("Teacher Email Address", max_length=50)
+    email = models.EmailField("Teacher Email Address", max_length=50, unique=True)
     password = models.TextField("Teacher Password", max_length=20)
     phone = models.TextField("Teacher Phone no.", max_length=10)
     name = models.TextField("Teacher Name", max_length=30)
@@ -35,14 +35,14 @@ class Student(models.Model):
     gender = models.TextField("Student Gender", choices=Gender.choices)
     grade = models.IntegerField("Student Grade")
     studentDesc = models.TextField("Student Description", max_length=200, blank=True)
-    displayImage = models.ImageField("Student Display Image")
+    displayImage = models.ImageField("Student Display Image", null=True, blank=True)
 
     # Parent Details
     parentName = models.TextField("Parents Name", max_length=30)
     parentEmail = models.EmailField("Parents Email Address", max_length=50)
 
     # Teacher Linked
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, to_field='email')
 
     def __str__(self):
         return self.firstName
