@@ -5,3 +5,4 @@ class TeacherSignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ["email", "password", "phone", "name"]
+

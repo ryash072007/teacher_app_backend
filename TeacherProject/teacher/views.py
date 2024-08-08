@@ -29,7 +29,7 @@ class TeacherResetPasswordEndpoint(APIView):
         teacher.save()
 
         if not sendOTP(teacher.email, teacher.otp):
-            return Response("Failed to send OTP")
+            return Response("Failed to send OTP", 500)
         return Response("Otp Sent", 200)
 
 class TeacherConfirmOTPEndPoint(APIView):
@@ -50,3 +50,12 @@ class TeacherConfirmOTPEndPoint(APIView):
         teacher.save()
 
         return Response("Teacher password successfully changed", 201)
+
+class TeacherSignInEndPoint(APIView):
+    def post(self, request):
+        if not Teacher.objects.filter(email = request.data["email"]).exists():
+            return Response("Given email is not a registered teacher", 401)
+        teacher = Teacher.objects.get(email = request.data["email"])            
+        if not (request.data['password'] == teacher.password):
+            return Response("Incorrect password", 401)
+        return Response("Successfully signed in", 200)
