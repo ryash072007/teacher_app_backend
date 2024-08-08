@@ -87,3 +87,34 @@ class StudentRemoveEndPoint(APIView):
 
         return Response("Student deleted successfully", 200)
 
+class StudentsListEndPoint(APIView):
+    def post(self, request):
+        studentList = Student.objects.filter(teacher=request.data["email"])
+        responseList = [
+            {
+                "firstName": student.firstName,
+                "lastName": student.lastName,
+                "displayImage": student.displayImage if student.displayImage else None,
+                "grade": student.grade,
+                "id": student.id
+            } for student in studentList
+        ]
+        return Response(responseList, 201)
+
+class StudentDetailsEndPoint(APIView):
+    def post(self, request):
+        if not Student.objects.filter(id=request.data["id"]).exists():
+            return Response("Invalid Student ID", 400)
+        student = Student.objects.get(id=request.data["id"])
+        responseJSON = {
+            "firstName": student.firstName,
+            "lastName": student.lastName,
+            "gender": student.gender,
+            "grade": student.grade,
+            "studentDesc": student.studentDesc,
+            "displayImage": student.displayImage if student.displayImage else None,
+            "parentName": student.parentName,
+            "parentEmail": student.parentEmail,
+            "id": student.id
+        }
+        return Response(responseJSON, 201)
