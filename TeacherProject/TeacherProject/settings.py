@@ -38,6 +38,8 @@ DEFAULT_FROM_EMAIL = "teacherappinternship@gmail.com"
 MEDIA_URL = "StudentDisplayImages/"
 MEDIA_ROOT = "teacher/StudentDisplayImages"
 
+DEFAULT_IMAGE = "/StudentDisplayImages/default.jpg"
+
 # Application definition
 
 INSTALLED_APPS = [

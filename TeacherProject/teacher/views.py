@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.conf import settings
 from .serializer import TeacherSignUpSerializer, StudentAddSerializer, TeacherQualificationSerializer
 from .models import Teacher, Student
 from .otp import createOTP, sendOTP
@@ -94,7 +95,7 @@ class StudentsListEndPoint(APIView):
             {
                 "firstName": student.firstName,
                 "lastName": student.lastName,
-                "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else None,
+                "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else request.build_absolute_uri(settings.DEFAULT_IMAGE),
                 "grade": student.grade,
                 "id": student.id
             } for student in studentList
@@ -112,7 +113,7 @@ class StudentDetailsEndPoint(APIView):
             "gender": student.gender,
             "grade": student.grade,
             "studentDesc": student.studentDesc,
-            "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else None,
+            "displayImage": request.build_absolute_uri(student.displayImage.url) if student.displayImage else request.build_absolute_uri(settings.DEFAULT_IMAGE),
             "parentName": student.parentName,
             "parentEmail": student.parentEmail,
             "id": student.id
