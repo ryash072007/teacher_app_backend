@@ -9,7 +9,7 @@ class TeacherSignUpSerializer(serializers.ModelSerializer):
 class TeacherQualificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = ["qualifications"]
+        fields = ["qualifications", "id"]
 
 class StudentAddSerializer(serializers.ModelSerializer):
     class Meta:

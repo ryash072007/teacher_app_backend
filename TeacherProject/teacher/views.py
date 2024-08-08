@@ -17,8 +17,15 @@ class TeacherSignUpEndPoint(APIView):
             serializer.save()
             return Response({"message": "Teacher created successfully", "status": 201}, 201)
 
-class TeacherQualificationEndPoint(APIView): # FIX THIS
+class TeacherQualificationEndPoint(APIView):
     def post(self, request):
+        if not Teacher.objects.filter(id = request.data["id"]).exists():
+            return Response({"message": "Teacher does not exist!", "status": 400}, 400)
+        
+        teacher = Teacher.objects.get(id = request.data["id"])
+        teacher.qualifications = request.data["qualifications"]
+        teacher.save()
+
         serializer = TeacherQualificationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
