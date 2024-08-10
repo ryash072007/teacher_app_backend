@@ -14,6 +14,7 @@ class Teacher(models.Model):
 
     # OTP Details
     forgottenPassword = models.BooleanField("Teacher Forgotten Password", default=False)
+    otpVerified = models.BooleanField("OTP has been verified", default=False)
     otp = models.TextField("OTP Password", max_length=4, null=True)
 
     # Student Details

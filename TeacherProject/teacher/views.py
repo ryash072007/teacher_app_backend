@@ -45,27 +45,45 @@ class TeacherResetPasswordEndpoint(APIView):
         teacher.save()
 
         if not sendOTP(teacher.email, teacher.otp):
-            return Response({"message": "Failed to send OTP", "status": 500})
-        return Response({"message": "OTP Sent", "status": 200})
+            return Response({"message": "Failed to send OTP", "id": teacher.id, "status": 500})
+        return Response({"message": "OTP Sent", "id": teacher.id, "status": 200})
 
 class TeacherConfirmOTPEndPoint(APIView):
     def post(self, request):
-        if not Teacher.objects.filter(email = request.data["email"]).exists():
+        if not Teacher.objects.filter(id = request.data["id"]).exists():
             return Response({"message": "Email is not a registered teacher", "status": 400})
         
-        teacher = Teacher.objects.get(email = request.data["email"])
+        teacher = Teacher.objects.get(id = request.data["id"])
 
         if teacher.forgottenPassword == False:
-            return Response({"message": "Teacher does not want to reset account", "status": 401})
+            return Response({"message": "Teacher does not want to reset account", "isValidOTP": False, "status": 401})
 
         if not (teacher.otp == request.data['otp']):
-            return Response({"message": "Invalid OTP", "status": 401})
+            return Response({"message": "Invalid OTP", "isValidOTP": False, "status": 401})
         
+        teacher.otpVerified = True
+        teacher.save()
+        return Response({"message": "Teacher OTP correct", "isValidOTP": True, "status": 201})
+
+
+class TeacherResetChangePassword(APIView):
+    def post(self, request):
+    
+        if not Teacher.objects.filter(id = request.data["id"]).exists():
+            return Response({"message": "ID is not a registered teacher", "status": 400})
+
+        teacher = Teacher.objects.get(id = request.data["id"])
+        if not teacher.otpVerified:
+            return Response({"message": "OTP has not been verified", "status": 400})
+
         teacher.forgottenPassword = False
+        teacher.otp = None
+        teacher.otpVerified = False
         teacher.password = request.data['password']
         teacher.save()
 
-        return Response({"message": "Teacher password successfully changed", "status": 201})
+        return Response({"message": "Password has been changed successfully", "status":200})
+
 
 class TeacherSignInEndPoint(APIView):
     def post(self, request):
