@@ -5,6 +5,7 @@ from django.conf import settings
 from .serializer import TeacherSignUpSerializer, StudentAddSerializer, TeacherQualificationSerializer
 from .models import Teacher, Student
 from .otp import createOTP, sendOTP
+from django.contrib.auth.models import User
 
 # Create your views here.
 class TeacherSignUpEndPoint(APIView):
@@ -39,7 +40,7 @@ class TeacherResetPasswordEndpoint(APIView):
         
         # Accessing teacher
         teacher = Teacher.objects.get(email = request.data["email"])
-
+        
         teacher.forgottenPassword = True
         teacher.otp = createOTP()
         teacher.save()
