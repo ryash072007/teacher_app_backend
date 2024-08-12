@@ -15,7 +15,8 @@ class TeacherSignUpEndPoint(APIView):
         serializer = TeacherSignUpSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Teacher created successfully", "status": 201})
+            id = Teacher.objects.get(email = request.data["email"]).id
+            return Response({"message": "Teacher created successfully","id": id, "status": 201})
 
 class TeacherQualificationEndPoint(APIView):
     def post(self, request):
