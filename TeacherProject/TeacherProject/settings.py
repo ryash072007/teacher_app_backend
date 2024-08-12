@@ -35,6 +35,8 @@ EMAIL_HOST_USER = "teacherappinternship@gmail.com"
 EMAIL_HOST_PASSWORD = "lxuk czth umfx nroh"
 DEFAULT_FROM_EMAIL = "teacherappinternship@gmail.com"
 
+CORS_ALLOW_ALL_ORIGINS=True
+
 MEDIA_URL = "StudentDisplayImages/"
 MEDIA_ROOT = "teacher/StudentDisplayImages"
 
@@ -50,7 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'teacher'
+    'teacher',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'TeacherProject.urls'
