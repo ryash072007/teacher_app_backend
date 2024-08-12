@@ -46,6 +46,7 @@ class Student(models.Model):
     # Parent Details
     parentName = models.TextField("Parents Name", max_length=30)
     parentEmail = models.EmailField("Parents Email Address", max_length=50)
+    parentPhone = models.TextField("Parents Phone no.", max_length=10)
 
     # Teacher Linked
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
