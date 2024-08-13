@@ -1,37 +1,47 @@
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.conf import settings
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from .serializer import TeacherSignUpSerializer, StudentAddSerializer, TeacherQualificationSerializer
 from .models import Teacher, Student
 from .otp import createOTP, sendOTP
 
 # Create your views here.
 class TeacherSignUpEndPoint(APIView):
+
+
     def post(self, request):
         print(request.data)
         if Teacher.objects.filter(email = request.data["email"]).exists():
             return Response({"message": "Teacher email already exists!", "status": 400})
         serializer = TeacherSignUpSerializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
         if serializer.is_valid():
+
             serializer.save()
             id = Teacher.objects.get(email = request.data["email"]).id
             return Response({"message": "Teacher created successfully","id": id, "status": 201})
+        return Response({"message": "Invalid Request", "status": 401})
 
 class TeacherQualificationEndPoint(APIView):
     def post(self, request):
         if not Teacher.objects.filter(id = request.data["id"]).exists():
-            return Response({"message": "Teacher does not exist!", "status": 400})
-        
-        teacher = Teacher.objects.get(id = request.data["id"])
-        teacher.qualifications = request.data["qualifications"]
-        teacher.save()
-
-        serializer = TeacherQualificationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+            print('not exists')
+            return Response({"message": "Teacher does not exist!", "status": 401})
+        print("it exists")
+        print('id',request.data['id'])
+        try:
+            teacher = Teacher.objects.get(id = request.data["id"])
+            teacher.qualifications = request.data["qualifications"]
+            teacher.save()
             return Response({"message": "Teacher Qualification added", "status": 201})
-        return Response({"message": "Invalid Qualification Request", "status": 400})
+        except:
+            return Response({"message": "Invalid Qualification Request", "status": 400})
+
+        
 
 class TeacherResetPasswordEndpoint(APIView):
     def post(self, request):
@@ -40,11 +50,10 @@ class TeacherResetPasswordEndpoint(APIView):
         
         # Accessing teacher
         teacher = Teacher.objects.get(email = request.data["email"])
-
         teacher.forgottenPassword = True
         teacher.otp = createOTP()
         teacher.save()
-
+        print('teacher saved')
         if not sendOTP(teacher.email, teacher.otp):
             return Response({"message": "Failed to send OTP", "id": teacher.id, "status": 500})
         return Response({"message": "OTP Sent", "id": teacher.id, "status": 200})
@@ -55,7 +64,6 @@ class TeacherConfirmOTPEndPoint(APIView):
             return Response({"message": "Email is not a registered teacher", "status": 400})
         
         teacher = Teacher.objects.get(id = request.data["id"])
-
         if teacher.forgottenPassword == False:
             return Response({"message": "Teacher does not want to reset account", "isValidOTP": False, "status": 401})
 
@@ -88,17 +96,27 @@ class TeacherResetChangePassword(APIView):
 
 class TeacherSignInEndPoint(APIView):
     def post(self, request):
+        print("post function ran")
+        email = request.data.get("email")
+        password = request.data.get("password")
+        print(email, password)
         if not Teacher.objects.filter(email = request.data["email"]).exists():
-            return Response({"message": "Given email is not a registered teacher", "status": 401})
-        teacher = Teacher.objects.get(email = request.data["email"])            
+            print('email not exists')
+            return Response({"message": "Given email is not a registered teacher", "status": 402})
+        teacher = Teacher.objects.get(email = request.data["email"])   
         if not (request.data['password'] == teacher.password):
+            print("incorrect pass")
             return Response({"message": "Incorrect password", "status": 401}, 401)
         return Response({"message": "Successfully signed in", "id": teacher.id, "status": 200})
+
 
 class StudentAddEndPoint(APIView):
     def post(self, request):
         serializer = StudentAddSerializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
         if serializer.is_valid():
+            print("Student Added")
             serializer.save()
             return Response({"message": "Student Added", "status": 200})
         return Response({"message": "Invalid Request", "status": 400})
